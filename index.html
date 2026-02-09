@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For My Valentine ❤️</title>
+
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#ffdce5;
+    overflow:hidden;
+}
+.hidden{display:none;}
+
+button{
+    padding:12px 20px;
+    font-size:18px;
+    margin:10px;
+    cursor:pointer;
+}
+
+#noBtn{position:absolute;}
+
+.heart{
+    position:fixed;
+    color:red;
+    animation: float 6s linear infinite;
+}
+@keyframes float{
+    from{transform:translateY(100vh);}
+    to{transform:translateY(-10vh);}
+}
+
+img{
+    width:250px;
+    border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="typing"></h1>
+
+<div id="game" class="hidden">
+<h2>Catch the Heart 5 times to unlock question 💖</h2>
+<button id="heartBtn">❤️</button>
+<p id="score">0 / 5</p>
+</div>
+
+<div id="slideshow" class="hidden">
+<h2>Our Memories 📸</h2>
+<img id="slide" src="">
+</div>
+
+<div id="questions" class="hidden">
+<h2 id="qText"></h2>
+<button onclick="nextQuestion()">Yes 😄</button>
+</div>
+
+<div id="final" class="hidden">
+<h2>Will you be my Valentine? ❤️</h2>
+<button onclick="yesClicked()">YES 💖</button>
+<button id="noBtn">NO 😭</button>
+<p id="result"></p>
+</div>
+
+<audio autoplay loop>
+<source src="https://www.bensound.com/bensound-music/bensound-love.mp3">
+</audio>
+
+<script>
+
+/* typing love letter */
+const message="Hi love… I made something special for you ❤️";
+let i=0;
+function typing(){
+ if(i<message.length){
+   document.getElementById("typing").innerHTML+=message.charAt(i);
+   i++;
+   setTimeout(typing,60);
+ }else{
+   document.getElementById("game").classList.remove("hidden");
+ }
+}
+typing();
+
+/* floating hearts */
+setInterval(()=>{
+ let heart=document.createElement("div");
+ heart.className="heart";
+ heart.innerHTML="❤️";
+ heart.style.left=Math.random()*100+"vw";
+ heart.style.fontSize=(20+Math.random()*30)+"px";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),6000);
+},500);
+
+/* mini game */
+let score=0;
+const heartBtn=document.getElementById("heartBtn");
+heartBtn.onclick=()=>{
+ score++;
+ document.getElementById("score").innerText=score+" / 5";
+ heartBtn.style.position="absolute";
+ heartBtn.style.left=Math.random()*80+"vw";
+ heartBtn.style.top=Math.random()*80+"vh";
+ if(score>=5){
+   document.getElementById("game").classList.add("hidden");
+   startSlideshow();
+ }
+};
+
+/* slideshow */
+const images=[
+"https://picsum.photos/300?1",
+"https://picsum.photos/300?2",
+"https://picsum.photos/300?3"
+];
+let slideIndex=0;
+function startSlideshow(){
+ document.getElementById("slideshow").classList.remove("hidden");
+ showSlides();
+}
+function showSlides(){
+ document.getElementById("slide").src=images[slideIndex];
+ slideIndex++;
+ if(slideIndex<images.length){
+   setTimeout(showSlides,2000);
+ }else{
+   document.getElementById("slideshow").classList.add("hidden");
+   document.getElementById("questions").classList.remove("hidden");
+   askQuestion();
+ }
+}
+
+/* multiple trick questions */
+const questions=[
+"Do you like surprises? 😄",
+"Are you ready for something special? 😏",
+"Do you trust me? 😌"
+];
+let qIndex=0;
+
+function askQuestion(){
+ document.getElementById("qText").innerText=questions[qIndex];
+}
+
+function nextQuestion(){
+ qIndex++;
+ if(qIndex<questions.length){
+   askQuestion();
+ }else{
+   document.getElementById("questions").classList.add("hidden");
+   document.getElementById("final").classList.remove("hidden");
+ }
+}
+
+/* moving + shrinking no button */
+const noBtn=document.getElementById("noBtn");
+let size=18;
+
+noBtn.addEventListener("mouseover",()=>{
+ size-=2;
+ if(size<8) size=8;
+ noBtn.style.fontSize=size+"px";
+ noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
+ noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
+});
+
+/* yes button */
+function yesClicked(){
+ document.getElementById("result").innerHTML=
+ "YAAAY ❤️ Best Valentine Ever 😍";
+}
+
+</script>
+
+</body>
+</html>
