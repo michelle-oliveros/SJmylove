@@ -2,30 +2,105 @@
 <html>
 <head>
 <title>For My Valentine ❤️</title>
-
 <style>
+    #loader {
+  position: fixed;
+  top:0; 
+  left:0;
+  width:100%; 
+  height:100%;
+  background:black;
+  color:pink;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:3em;
+  z-index:10000;
+}
 body{
+    
     font-family: Arial;
     text-align:center;
     background:#ffdce5;
-    overflow:hidden;
+    overflow-y: auto;
+    overflow: hidden; /* This removes ALL scrollbars */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical centering */
+    align-items: center;     /* horizontal centering */
+    height: 100vh;
+    width: 100vw;    
 }
 .hidden{display:none;}
 
 button{
-    padding:12px 20px;
+    padding:12px 25px;
     font-size:18px;
     margin:10px;
     cursor:pointer;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    white-space: nowrap; /* Prevents text from wrapping/breaking out */
 }
 
-#noBtn{position:absolute;}
+.alignment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* centers text + buttons */
+    gap: 10px;
+}
+ 
+#finalButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;  /* center them under text */
+    gap: 15px;
+    margin-top: 10px;
+}
 
+
+#yesBtn, #noBtn {
+    position: relative;
+    font-size: 18px;
+    margin: 0;
+    display: inline-block;
+    padding: 8px 16px;   /* ✅ CORRECT */
+}
+
+
+#noBtn {
+    z-index: 110; /* Ensures the real NO button is on top */
+}
 .heart{
-    position:fixed;
-    color:red;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: red;
     animation: float 6s linear infinite;
+    z-index: 999999; 
+    pointer-events: none;
 }
+video {
+    max-height: 50vh; /* Limits video to half the screen height */
+    width: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#videoContainer h2 {
+    margin-top: 0;
+    font-size: 1.5rem; /* Shrinks the header slightly to save space */
+}
+
+#videoContainer{
+    position:relative;
+    z-index:1;
+    opacity:0;
+    transition:opacity 1.5s ease;
+}
+
 @keyframes float{
     from{transform:translateY(100vh);}
     to{transform:translateY(-10vh);}
@@ -35,15 +110,131 @@ img{
     width:250px;
     border-radius:15px;
 }
+#final div {
+    display: flex;
+    gap: 20px;
+}
+
+/* This puts the YES and NO buttons in a row under the text */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Space between YES and NO */
+    margin-top: 20px;
+}
+#final button:not(#noBtn) {
+    margin-right: 0px; /* Increase this number to move it further left */
+    display: inline-block;
+}
+.hidden {
+    display: none !important;
+}
+
+#successMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* Keeps the question and YES button centered together */
+#questionArea {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns content to the left of the container */
+    max-width: fit-content;  /* Shrinks the area to the size of the text */
+    margin: 0 auto;
+    justify-content: center; /* Centers the whole block on the screen */
+    width: 100%;
+}
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Adjust this percentage to move the YES button left or right */
+    transform: translateX(-30px); 
+}
+
+#typingReminder {
+    font-size: 14px;      /* Small reminder size */
+    color: #000000;          /* Subtle gray color */
+    margin-top: 10px;     /* Small gap below the big text */
+    font-style: italic;
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+}
+
+#transitionText {
+    color: #000000; /* Pure black */
+    font-size: 1.8rem;
+    font-style: italic;
+    font-family: Arial, sans-serif;
+}
+
+#transitionText2 {
+    color: #000000;
+    font-size: 1.8rem;
+    font-style: italic;
+    font-family: Arial, sans-serif;
+}
+
+#toGiftBtn {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-top: 10px;
+    padding: 10px 25px;
+    font-size: 18px;
+    z-index: 2000;
+}
+
+#giftBox {
+    font-size: 100px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: inline-block;
+}
+
+#giftBox:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+#giftSection {
+    text-align: center;
+}
+
 </style>
 </head>
 
 <body>
+    <div id="loader">
+    <h1>Happy Valentines!</h1>
+</div>
 
-<h1 id="typing"></h1>
+<div id="transitionScreen" class="hidden">
+  <h2 id="transitionText" style="color: #000000; font-style: italic;">But before that, let me show...</h2>
+</div>
+
+<div id="transitionScreen2" class="hidden">
+  <h2 id="transitionText2" style="color: #000000; font-style: italic;">I have some questions...</h2>
+</div>
+
+<div id="typingContainer">
+  <h1 id="typing"></h1>
+  <p id="typingReminder" class="hidden">Please click the next button</p>
+  <button id="nextBtn" class="hidden">Next ➡️</button>
+</div> 
+
+<div id="questions" class="hidden">
+  <h2 id="qText"></h2>
+  
+  <p id="questionReminder" style="color: #000000; font-size: 14px; font-style: italic; margin-bottom: 10px;"></p>
+  
+  <button onclick="nextQuestion()">Yes 😄</button>
+</div>
+
 
 <div id="game" class="hidden">
-<h2>Catch the Heart 5 times to unlock question 💖</h2>
+<h2>Catch the Heart 5 times to unlock question ❤️</h2>
 <button id="heartBtn">❤️</button>
 <p id="score">0 / 5</p>
 </div>
@@ -53,16 +244,66 @@ img{
 <img id="slide" src="">
 </div>
 
+<div id="videoContainer" class="hidden">
+    <h2>A special memory... 🎥</h2>
+    <video id="myVideo1" width="300" controls playsinline>
+        <source src="images/vid1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <video id="myVideo2" class="hidden" width="300" controls playsinline>
+        <source src="images/vid2.mp4" type="video/mp4">
+    </video>
+    <br>
+    <button id="nextVidBtn" onclick="showSecondVideo()">Next Video ⏭️</button>
+    <button id="contBtn" class="hidden" onclick="startQuestions()">Continue ❤️</button>
+</div>
+
 <div id="questions" class="hidden">
 <h2 id="qText"></h2>
 <button onclick="nextQuestion()">Yes 😄</button>
 </div>
 
 <div id="final" class="hidden">
-<h2>Will you be my Valentine? ❤️</h2>
-<button onclick="yesClicked()">YES 💖</button>
-<button id="noBtn">NO 😭</button>
+  <div id="questionArea">
+    <div class="alignment-container">
+      <h2>Will you be my Valentine? ❤️</h2>
+      <div id="finalButtons">
+        <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
+        <button id="noBtn">NO 😔</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div id="successMessage" class="hidden">
+        <h1 style="color: #ff4d6d;">YAAAY! Thank you my love ❤️❤️❤️</h1>
+        <br>
+        <img src="images/pic5.jpeg" id="finalPic" style="width: 250px; border-radius: 20px;">
+        <p style="color: #000000; font-size: 14px; font-style: italic; margin-top: 20px; margin-bottom: 5px;">
+        Click next for your surprise! 
+    </p>
+        <button id="toGiftBtn" onclick="showGift()">Next ➡️</button> 
+    </div>
 <p id="result"></p>
+</div>
+
+<div id="giftSection" class="hidden">
+    <h2 style="color: #ff4d6d;">I have a little gift for you...</h2>
+    <div id="giftBox" onclick="openGift()">🎁</div>
+        <!-- ADD THIS -->
+    <p id="giftReminder" style="
+        font-size:14px;
+        color:#000;
+        font-style:italic;
+        margin-top:10px;
+    ">
+        Please click the gift 🎁
+    </p>
+    <div id="qrContainer" class="hidden">
+        <p style="color: black; font-style: italic;">Scan this, my love:</p>
+        <img src="images/qrcode.jpg" alt="QR Code" style="width: 200px; border-radius: 10px;">
+    </div>
 </div>
 
 <audio autoplay loop>
@@ -72,18 +313,41 @@ img{
 <script>
 
 /* typing love letter */
-const message="Hi love… I made something special for you ❤️";
-let i=0;
-function typing(){
- if(i<message.length){
-   document.getElementById("typing").innerHTML+=message.charAt(i);
-   i++;
-   setTimeout(typing,60);
- }else{
-   document.getElementById("game").classList.remove("hidden");
- }
+function typing() {
+  const message = "Sarah my love… I made something special for you ❤️";
+  let i = 0;
+  const typingElem = document.getElementById("typing");
+  const nextBtn = document.getElementById("nextBtn");
+  const reminder = document.getElementById("typingReminder"); // Add this
+
+  function typeChar() {
+    if (i < message.length) {
+      typingElem.innerHTML += message.charAt(i);
+      i++;
+      setTimeout(typeChar, 60);
+    } else {
+      // Show the Next button after typing is complete
+      reminder.classList.remove("hidden"); // Show the small text
+      nextBtn.classList.remove("hidden");
+    }
+  }
+
+  typeChar();
 }
-typing();
+window.addEventListener("load", () => {
+  // Show loader for 2.5 seconds
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    loader.style.transition = "opacity 1s ease";
+    loader.style.opacity = 0;
+
+    setTimeout(() => {
+      loader.style.display = "none";  // Remove loader from DOM
+      typing(); // Start your typing animation
+    }, 1000); // matches the fade duration
+
+  }, 2500); // loader visible for 2.5 seconds
+});
 
 /* floating hearts */
 setInterval(()=>{
@@ -97,84 +361,297 @@ setInterval(()=>{
 },500);
 
 /* mini game */
-let score=0;
-const heartBtn=document.getElementById("heartBtn");
-heartBtn.onclick=()=>{
- score++;
- document.getElementById("score").innerText=score+" / 5";
- heartBtn.style.position="absolute";
- heartBtn.style.left=Math.random()*80+"vw";
- heartBtn.style.top=Math.random()*80+"vh";
- if(score>=5){
-   document.getElementById("game").classList.add("hidden");
-   startSlideshow();
- }
+/* mini game - Updated with Transition */
+let score = 0;
+const heartBtn = document.getElementById("heartBtn");
+
+heartBtn.onclick = () => {
+  score++;
+  document.getElementById("score").innerText = score + " / 5";
+  heartBtn.style.position = "absolute";
+  heartBtn.style.left = Math.random() * 80 + "vw";
+  heartBtn.style.top = Math.random() * 80 + "vh";
+
+  if (score >= 5) {
+    // 1. Hide the game and typing elements
+    document.getElementById("typing").style.display = "none";
+    document.getElementById("game").classList.add("hidden");
+
+    // 2. Show the transition text
+    const transition = document.getElementById("transitionScreen");
+    transition.classList.remove("hidden");
+
+    // 3. Wait 3 seconds, then hide text and start slideshow
+    setTimeout(() => {
+      transition.classList.add("hidden");
+      startSlideshow();
+    }, 3000); // This creates the 3-second pause
+  }
 };
 
-/* slideshow */
-const images=[
-"https://picsum.photos/300?1",
-"https://picsum.photos/300?2",
-"https://picsum.photos/300?3"
-];
-let slideIndex=0;
-function startSlideshow(){
- document.getElementById("slideshow").classList.remove("hidden");
- showSlides();
+function showSecondVideo() {
+    
+    
+    const v1 = document.getElementById("myVideo1");
+    const v2 = document.getElementById("myVideo2");
+    const nextBtn = document.getElementById("nextVidBtn");
+    const contBtn = document.getElementById("contBtn");
+
+    if (v1 && v2) {
+        v1.style.display = "none";
+        v1.pause();
+        
+        v2.classList.remove("hidden");
+        v2.style.display = "inline-block";
+        // v2.play(); <-- REMOVE OR COMMENT OUT THIS LINE
+
+        nextBtn.style.display = "none";
+        contBtn.classList.remove("hidden");
+        contBtn.style.display = "inline-block";
+        heartBurst(window.innerWidth/2, window.innerHeight/2);
+    } else {
+        console.error("Could not find v1 or v2 IDs");
+    }
 }
-function showSlides(){
- document.getElementById("slide").src=images[slideIndex];
- slideIndex++;
- if(slideIndex<images.length){
-   setTimeout(showSlides,2000);
- }else{
-   document.getElementById("slideshow").classList.add("hidden");
-   document.getElementById("questions").classList.remove("hidden");
-   askQuestion();
- }
+
+/* slideshow */
+const images = [
+  "images/pic1.jpeg",
+  "images/pic2.jpeg",
+  "images/pic3.jpeg",
+  "images/pic4.jpeg"
+];
+
+let slideIndex = 0;
+
+function startSlideshow() {
+  const slideshowDiv = document.getElementById("slideshow");
+  if (images.length === 0) {
+    console.error("The images array is empty!");
+    return;
+  }
+  slideshowDiv.classList.remove("hidden");
+  showSlides();
+}
+
+function showSlides() {
+    const imgElement = document.getElementById("slide");
+    
+    if (images[slideIndex]) {
+        imgElement.src = images[slideIndex];
+        slideIndex++;
+        setTimeout(showSlides, 2000);
+    } else {
+        // SLIDESHOW FINISHED -> SHOW VIDEO
+        setTimeout(() => {
+            // 1. Hide Slideshow
+            document.getElementById("slideshow").style.display = "none";
+            
+            // 2. Reveal Video Container
+            const videoCont = document.getElementById("videoContainer");
+            videoCont.classList.remove("hidden");
+            videoCont.style.display = "block"; // Force it to show
+            setTimeout(()=>videoCont.style.opacity="1",50);
+            
+            // 3. Load and Play Video
+            
+            console.log("Video should be visible now.");
+        }, 1000);
+    }
+}
+
+
+function startQuestions() {
+    // 1. Hide the video container
+    document.getElementById("videoContainer").style.display = "none";
+    
+    // 2. Show the "I have some questions" transition
+    const transition2 = document.getElementById("transitionScreen2");
+    transition2.classList.remove("hidden");
+    transition2.style.display = "block";
+
+    // 3. Wait 2 seconds, then hide transition and show actual questions
+    setTimeout(() => {
+        transition2.style.display = "none";
+        transition2.classList.add("hidden");
+        
+        document.getElementById("questions").classList.remove("hidden");
+        document.getElementById("questions").style.display = "block";
+        askQuestion();
+    }, 2000); // 2000ms = 2 seconds
+}
+
+function heartBurst(x = window.innerWidth/2, y = window.innerHeight/2){
+    for(let i=0;i<25;i++){
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤️";
+        heart.style.left=x+"px";
+        heart.style.top=y+"px";
+        heart.style.fontSize=(20+Math.random()*30)+"px";
+        heart.style.position="fixed";
+        heart.style.transition="all 1s ease-out";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>{
+            heart.style.left=(x+(Math.random()*400-200))+"px";
+            heart.style.top=(y+(Math.random()*400-200))+"px";
+            heart.style.opacity="0";
+        },10);
+
+        setTimeout(()=>heart.remove(),1000);
+    }
+}
+let explosionInterval; // Add this variable at the top of your script
+
+function loveExplosion(){
+    explosionInterval = setInterval(()=>{
+        for(let i=0;i<10;i++){
+            let heart=document.createElement("div");
+            heart.className="heart";
+            heart.innerHTML="💖";
+            heart.style.left=Math.random()*100+"vw";
+            heart.style.fontSize=(30+Math.random()*40)+"px";
+            document.body.appendChild(heart);
+            setTimeout(()=>heart.remove(),6000);
+        }
+    },300);
+}
+
+function sparkle(x,y){
+    let s=document.createElement("div");
+    s.innerHTML="✨";
+    s.style.position="fixed";
+    s.style.left=x+"px";
+    s.style.top=y+"px";
+    s.style.fontSize="18px";
+    s.style.pointerEvents="none";
+    s.style.transition="all 0.6s linear";
+    document.body.appendChild(s);
+
+    setTimeout(()=>{
+        s.style.top=(y-40)+"px";
+        s.style.opacity="0";
+    },10);
+
+    setTimeout(()=>s.remove(),600);
 }
 
 /* multiple trick questions */
 const questions=[
-"Do you like surprises? 😄",
-"Are you ready for something special? 😏",
+"Do you love me? 😄",
 "Do you trust me? 😌"
 ];
 let qIndex=0;
 
-function askQuestion(){
- document.getElementById("qText").innerText=questions[qIndex];
+function askQuestion() {
+  const qText = document.getElementById("qText");
+  const qReminder = document.getElementById("questionReminder");
+  
+  qText.innerText = questions[qIndex];
+
+  // Only show the reminder for the very first question (Index 0)
+  if (qIndex === 0) {
+    qReminder.innerText = "Please don't look for the no button, you must love me 😊";
+    qReminder.style.display = "block";
+  } else {
+    qReminder.style.display = "none";
+  }
 }
 
-function nextQuestion(){
- qIndex++;
- if(qIndex<questions.length){
-   askQuestion();
- }else{
-   document.getElementById("questions").classList.add("hidden");
-   document.getElementById("final").classList.remove("hidden");
- }
+function nextQuestion() {
+  qIndex++;
+  if (qIndex < questions.length) {
+    askQuestion();
+  } else {
+    document.getElementById("questions").style.display = "none";
+    document.getElementById("final").classList.remove("hidden");
+  }
 }
+
+
 
 /* moving + shrinking no button */
-const noBtn=document.getElementById("noBtn");
-let size=18;
+const noBtn = document.getElementById("noBtn");
+let size = 18;
 
-noBtn.addEventListener("mouseover",()=>{
- size-=2;
- if(size<8) size=8;
- noBtn.style.fontSize=size+"px";
- noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
- noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
+noBtn.addEventListener("mouseover", () => {
+    size -= 1.2;
+    if (size < 8) size = 8;
+    noBtn.style.fontSize = size + "px";
+
+    // Move NO button only when hovered
+    noBtn.style.position = "fixed"; 
+
+    const padding = 100;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    const randomX = Math.floor(Math.random() * (maxX - padding) + padding);
+    const randomY = Math.floor(Math.random() * (maxY - padding) + padding);
+
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+
+    sparkle(randomX, randomY);
 });
 
+
 /* yes button */
-function yesClicked(){
- document.getElementById("result").innerHTML=
- "YAAAY ❤️ Best Valentine Ever 😍";
+function yesClicked() {
+    // 1. Hide the entire question area
+    document.getElementById("questionArea").style.display = "none";
+    
+    // 2. Hide the NO button (crucial because absolute elements linger)
+    document.getElementById("noBtn").style.display = "none";
+
+    // 3. Reveal the Success message and photo
+    const success = document.getElementById("successMessage");
+    success.classList.remove("hidden");
+    success.style.display = "flex"; // Use flex to keep images centered
+    
+    loveExplosion(); 
+}
+document.getElementById("nextBtn").addEventListener("click", () => {
+  document.getElementById("typingContainer").style.display = "none"; // hide typing
+  document.getElementById("game").classList.remove("hidden"); // show game
+});
+
+function showGift() {
+
+    // 1. Stop the explosion!
+    clearInterval(explosionInterval);
+
+    // Hide the success message
+    document.getElementById("successMessage").classList.add("hidden");
+    document.getElementById("toGiftBtn").classList.add("hidden");
+    
+    // Show the gift section
+    const giftSection = document.getElementById("giftSection");
+    giftSection.classList.remove("hidden");
+    giftSection.style.display = "block";
+}
+
+function openGift() {
+    const giftBox = document.getElementById("giftBox");
+    const qrContainer = document.getElementById("qrContainer");
+
+    // "Open" the box
+    giftBox.innerHTML = "📦✨";
+    giftBox.style.transform = "scale(0.8)";
+
+    document.getElementById("giftReminder").style.display = "none";
+    
+    // Show the QR code after a tiny delay
+    setTimeout(() => {
+        giftBox.classList.add("hidden");
+        qrContainer.classList.remove("hidden");
+        qrContainer.style.display = "block";
+        heartBurst(window.innerWidth/2, window.innerHeight/2); // Reusing your burst effect!
+    }, 500);
 }
 
 </script>
-
 </body>
 </html>
